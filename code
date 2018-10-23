@@ -1,0 +1,23 @@
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+print("Flipcart IPHONE XS MAX MOBILE ACCESSORIES PAGE_")
+print("Total number of pages 31")
+for page in range(1,int(input('Enter the number of pages to be scraped'))):
+url='https://www.flipkart.com/search?q=iphone+xs+case&sid=tyy%2C4mr%2Cq2u%2Cajg&as=on&as- show=on&otracker=AS_QueryStore_OrganicAutoSuggest_1_14&otracker1=AS_QueryStore_OrganicAuto Suggest_1_14&as-pos=1&as-type=RECENT&as-backfill=on&page={}'.format(page)
+response = requests.get(url)
+content = response.content
+soup = BeautifulSoup(content, 'html.parser')
+xs = soup.find_all('div', attrs={'class':"_3liAhj _1R0K0g"})
+len(xs)
+list_products=[]
+for i in xs:
+data={}
+for j in (i.find_all('div', attrs={'class':"VGWI6T"})):
+of= (j.find_all('span'))
+data['offers'] = [f.text for f in of]
+data['model_name']=(i.find('a',attrs={'class':"_2cLu-l"})).text.replace('\n','')
+data['price'] =(i.find('div', attrs={'class':"_1vC4OE"})).text.replace('\n','')
+list_products.append(data)
+df = pd.DataFrame(list_products)
+df.to_csv("C:/Users/BHARATH/Desktop/sample_flip.csv")
